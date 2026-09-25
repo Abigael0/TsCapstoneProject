@@ -1,142 +1,304 @@
-import {
-  ArrowRight,
-  CheckCircle2,
-  MessageSquare,
-  ShieldCheck,
-} from "lucide-react";
 import { Link } from "react-router-dom";
+import PublicNavbar from "../components/PublicNavbar";
+
+const features = [
+  {
+    number: "01",
+    title: "Centralized management",
+    text: "Bring complaints, feedback, requests, and support tickets into one organized workspace.",
+  },
+  {
+    number: "02",
+    title: "Clear status tracking",
+    text: "Know what has been received, what is being handled, and what has already been resolved.",
+  },
+  {
+    number: "03",
+    title: "Team accountability",
+    text: "Give your team visibility into issues and make ownership easier to manage.",
+  },
+  {
+    number: "04",
+    title: "Complete history",
+    text: "Keep a record of each concern from submission through resolution.",
+  },
+];
+
+const workflow = [
+  {
+    number: "01",
+    title: "Raise",
+    text: "A user submits a complaint, request, feedback, or issue.",
+  },
+  {
+    number: "02",
+    title: "Organize",
+    text: "Your team categorizes and prioritizes what has been received.",
+  },
+  {
+    number: "03",
+    title: "Act",
+    text: "The appropriate team member investigates and works on the issue.",
+  },
+  {
+    number: "04",
+    title: "Resolve",
+    text: "The outcome is recorded and the user can follow the progress.",
+  },
+];
+
+const industries = [
+  "Education",
+  "Healthcare",
+  "Technology",
+  "Finance",
+  "Government",
+  "Non-profits",
+];
 
 export default function Home() {
   return (
-    <main className="home-page">
-      <header className="home-navbar">
-        <Link to="/" className="home-brand">
-          <span className="brand-mark">
-            <MessageSquare size={19} />
-          </span>
+    <div className="public-page">
+      <PublicNavbar />
 
-          <span>ComplaintsHQ</span>
-        </Link>
+      <main>
+        {/* Hero */}
+        <section className="hero-section">
+          <div className="container hero-grid">
+            <div className="hero-content">
+              <span className="eyebrow">
+                Complaint & feedback management
+              </span>
 
-        <nav className="home-navigation">
-          <Link to="/login">Sign in</Link>
+              <h1>
+                Every concern deserves
+                <span> a resolution.</span>
+              </h1>
 
-          <Link
-            to="/register"
-            className="home-nav-button"
-          >
-            Get started
-          </Link>
-        </nav>
-      </header>
+              <p className="hero-description">
+                Give your users a clear way to raise complaints, share
+                feedback, and report issues while giving your team the tools
+                to organize, track, and resolve them.
+              </p>
 
-      <section className="hero-section">
-        <div className="hero-content">
-          <p className="eyebrow">
-            Complaint management made clear
-          </p>
+              <div className="hero-actions">
+                <Link to="/register" className="btn btn-primary btn-large">
+                  Get started
+                </Link>
 
-          <h1>
-            Report issues.
-            <br />
-            Track progress.
-            <br />
-            Get responses.
-          </h1>
+                <Link to="/about" className="btn btn-secondary btn-large">
+                  Learn more
+                </Link>
+              </div>
 
-          <p className="hero-description">
-            A centralized platform for submitting complaints,
-            tracking their status, and receiving responses from
-            the responsible team.
-          </p>
-
-          <div className="hero-actions">
-            <Link
-              to="/register"
-              className="hero-primary-button"
-            >
-              Submit a complaint
-              <ArrowRight size={18} />
-            </Link>
-
-            <Link
-              to="/login"
-              className="hero-secondary-button"
-            >
-              Sign in
-            </Link>
-          </div>
-        </div>
-
-        <div className="hero-panel">
-          <div className="hero-panel-header">
-            <span>Complaint status</span>
-            <span className="hero-live-dot" />
-          </div>
-
-          <div className="hero-status-row">
-            <div className="hero-status-icon">
-              <CheckCircle2 size={19} />
+              <div className="hero-note">
+                <span className="hero-note-dot" />
+                Built for teams of every size
+              </div>
             </div>
 
+            <div className="hero-visual">
+              <div className="hero-card hero-card-main">
+                <div className="hero-card-header">
+                  <div>
+                    <span className="small-label">Ticket</span>
+                    <strong>#CMP-1048</strong>
+                  </div>
+
+                  <span className="status-badge status-progress">
+                    <span className="status-dot" />
+                    In Progress
+                  </span>
+                </div>
+
+                <div className="hero-ticket">
+                  <span className="small-label">SUBJECT</span>
+                  <h3>Service request requires attention</h3>
+                  <p>
+                    A submitted concern is being reviewed by the responsible
+                    team.
+                  </p>
+                </div>
+
+                <div className="hero-progress">
+                  <div className="hero-progress-label">
+                    <span>Resolution progress</span>
+                    <strong>68%</strong>
+                  </div>
+
+                  <div className="progress-track">
+                    <div className="progress-fill" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="floating-card floating-card-top">
+                <span className="floating-icon">✓</span>
+                <div>
+                  <strong>Issue resolved</strong>
+                  <span>2 minutes ago</span>
+                </div>
+              </div>
+
+              <div className="floating-card floating-card-bottom">
+                <span className="floating-number">24</span>
+                <div>
+                  <strong>Open issues</strong>
+                  <span>Across your team</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Product introduction */}
+        <section className="section section-white">
+          <div className="container intro-grid">
             <div>
-              <strong>Complaint tracked</strong>
-              <span>Your issue is being reviewed.</span>
+              <span className="eyebrow">One system for every issue</span>
+
+              <h2>
+                Feedback shouldn't disappear
+                <span> after it is received.</span>
+              </h2>
+            </div>
+
+            <div className="intro-text">
+              <p>
+                Complaints, requests, and feedback often arrive through
+                different channels. When there is no central system, important
+                issues can become difficult to track.
+              </p>
+
+              <p>
+                ComplaintsHQ gives organizations one structured place to
+                collect concerns, organize them, assign responsibility, and
+                follow them through to resolution.
+              </p>
             </div>
           </div>
+        </section>
 
-          <div className="hero-progress">
-            <span />
+        {/* Workflow */}
+        <section className="section workflow-section">
+          <div className="container">
+            <div className="section-heading">
+              <span className="eyebrow">How it works</span>
+
+              <h2>From concern to resolution.</h2>
+
+              <p>
+                A simple workflow that keeps users informed and teams
+                accountable.
+              </p>
+            </div>
+
+            <div className="workflow-grid">
+              {workflow.map((item) => (
+                <article className="workflow-card" key={item.number}>
+                  <span className="step-number">{item.number}</span>
+
+                  <h3>{item.title}</h3>
+
+                  <p>{item.text}</p>
+                </article>
+              ))}
+            </div>
           </div>
+        </section>
 
-          <div className="hero-panel-footer">
-            <span>Submitted</span>
-            <span>In progress</span>
-            <span>Resolved</span>
+        {/* Features */}
+        <section className="section section-white">
+          <div className="container">
+            <div className="section-heading">
+              <span className="eyebrow">Built for action</span>
+
+              <h2>Everything your team needs to stay accountable.</h2>
+            </div>
+
+            <div className="features-grid">
+              {features.map((feature) => (
+                <article className="feature-card" key={feature.number}>
+                  <span className="feature-number">{feature.number}</span>
+
+                  <h3>{feature.title}</h3>
+
+                  <p>{feature.text}</p>
+                </article>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="features-section">
-        <div className="feature">
-          <div className="feature-icon">
-            <MessageSquare size={20} />
+        {/* Integrations */}
+        <section className="section integration-section">
+          <div className="container integration-grid">
+            <div>
+              <span className="eyebrow">Fits your workflow</span>
+
+              <h2>Connect the tools your team already uses.</h2>
+
+              <p>
+                ComplaintsHQ can sit alongside the communication and
+                productivity tools your organization already depends on.
+              </p>
+            </div>
+
+            <div className="integration-list">
+              <div>Slack</div>
+              <div>Microsoft Teams</div>
+              <div>Google Workspace</div>
+              <div>Email</div>
+              <div>Jira</div>
+              <div>Trello</div>
+            </div>
           </div>
+        </section>
 
-          <h2>Simple reporting</h2>
+        {/* Industries */}
+        <section className="section section-white">
+          <div className="container">
+            <div className="section-heading">
+              <span className="eyebrow">Designed to scale</span>
 
-          <p>
-            Submit a complaint with the information needed
-            to understand the issue.
-          </p>
-        </div>
+              <h2>Built for teams of every size.</h2>
 
-        <div className="feature">
-          <div className="feature-icon">
-            <ShieldCheck size={20} />
+              <p>
+                Whether you are managing a small team or a large organization,
+                the workflow stays simple.
+              </p>
+            </div>
+
+            <div className="industries-grid">
+              {industries.map((industry) => (
+                <div className="industry-card" key={industry}>
+                  {industry}
+                </div>
+              ))}
+            </div>
           </div>
+        </section>
 
-          <h2>Track your complaint</h2>
+        {/* CTA */}
+        <section className="cta-section">
+          <div className="container cta-content">
+            <span className="eyebrow">Start managing better</span>
 
-          <p>
-            Monitor the status of your submitted complaints
-            from one place.
-          </p>
-        </div>
+            <h2>Give every concern a clear path forward.</h2>
 
-        <div className="feature">
-          <div className="feature-icon">
-            <CheckCircle2 size={20} />
+            <p>
+              Create a structured process for receiving, managing, and
+              resolving feedback.
+            </p>
+
+            <Link to="/register" className="btn btn-light btn-large">
+              Get started
+            </Link>
           </div>
+        </section>
+      </main>
 
-          <h2>Receive responses</h2>
-
-          <p>
-            View responses and updates from the team handling
-            your complaint.
-          </p>
-        </div>
-      </section>
-    </main>
+      <PublicFooter />
+    </div>
   );
 }
