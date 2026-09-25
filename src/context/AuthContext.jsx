@@ -1,0 +1,65 @@
+import {
+  createContext,
+  useContext,
+  useState,
+} from "react";
+
+import api from "../services/api";
+
+const AuthContext = createContext(null);
+
+export function AuthProvider({ children }) {
+  const [currentUser, setCurrentUser] = useState(() => api.getStoredUser());
+  const [isLoading] = useState(false);
+
+  async function login(credentials) {
+    const user = await api.login(credentials);
+
+    setCurrentUser(user);
+
+    return user;
+  }
+
+  async function register(userData) {
+    const user = await api.register(userData);
+
+    setCurrentUser(user);
+
+    return user;
+  }
+
+  function logout() {
+    api.logout();
+    setCurrentUser(null);
+  }
+
+  const value = {
+    currentUser,
+    isAuthenticated: Boolean(currentUser),
+    isLoading,
+    login,
+    register,
+    logout,
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+// This hook intentionally lives with the provider so consumers can import both
+// from the same context module.
+// eslint-disable-next-line react-refresh/only-export-components
+export function useAuth() {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error(
+      "useAuth must be used inside AuthProvider"
+    );
+  }
+
+  return context;
+}
