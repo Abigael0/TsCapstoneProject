@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import PublicNavbar from "../components/PublicNavbar";
-
+import PublicFooter from "./PublicFooter";
+<PublicNavbar />
 const features = [
   {
     number: "01",
@@ -86,9 +87,9 @@ export default function Home() {
                   Get started
                 </Link>
 
-                <Link to="/about" className="btn btn-secondary btn-large">
+               <a href="#about" className="btn btn-secondary btn-large"> 
                   Learn more
-                </Link>
+                </a>
               </div>
 
               <div className="hero-note">
@@ -151,8 +152,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Product introduction */}
-        <section className="section section-white">
+        {/* Product introduction */ }
+        <section id="about-content" className="section section-white">
           <div className="container intro-grid">
             <div>
               <span className="eyebrow">One system for every issue</span>
