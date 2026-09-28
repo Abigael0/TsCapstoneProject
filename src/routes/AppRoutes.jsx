@@ -13,6 +13,7 @@ import AppShell from "../components/AppShell";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import About from "../pages/About";
 
 import UserDashboard from "../pages/UserDashboard";
 import SubmitComplaint from "../pages/SubmitComplaint";
@@ -153,6 +154,7 @@ export default function AppRoutes() {
     <Routes>
       {/* Public */}
       <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
 
       <Route
         path="/login"
