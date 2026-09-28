@@ -13,6 +13,8 @@ import AppShell from "../components/AppShell";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import VerifyOtp from "../pages/VerifyOtp";
+import AdminSignup from "../pages/AdminSignup";
 
 import UserDashboard from "../pages/UserDashboard";
 import SubmitComplaint from "../pages/SubmitComplaint";
@@ -40,7 +42,7 @@ function ProtectedRoute({ children }) {
   if (isLoading) return <LoadingScreen />;
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/signin" replace />;
   }
 
   return children;
@@ -52,7 +54,7 @@ function AdminRoute({ children }) {
   if (isLoading) return <LoadingScreen />;
 
   if (!currentUser) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/signin" replace />;
   }
 
   if (currentUser.role !== "admin") {
@@ -155,6 +157,14 @@ export default function AppRoutes() {
       <Route path="/" element={<Home />} />
 
       <Route
+        path="/signin"
+        element={
+          <AuthPage>
+            <Login onLogin={login} />
+          </AuthPage>
+        }
+      />
+      <Route
         path="/login"
         element={
           <AuthPage>
@@ -168,6 +178,22 @@ export default function AppRoutes() {
         element={
           <AuthPage>
             <Register onRegister={register} />
+          </AuthPage>
+        }
+      />
+      <Route
+        path="/verify-otp"
+        element={
+          <AuthPage>
+            <VerifyOtp />
+          </AuthPage>
+        }
+      />
+      <Route
+        path="/admin-signup"
+        element={
+          <AuthPage>
+            <AdminSignup />
           </AuthPage>
         }
       />
