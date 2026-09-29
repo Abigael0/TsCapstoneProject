@@ -95,6 +95,14 @@ const api = {
   },
 
   async register({ name, email, password }) {
+    return this.registerAccount({ name, email, password, role: "user" });
+  },
+
+  async registerAdmin({ name, email, password }) {
+    return this.registerAccount({ name, email, password, role: "admin" });
+  },
+
+  async registerAccount({ name, email, password, role }) {
     migrateAccountIdentifiers();
     const users = readStorage(USERS_KEY);
 
@@ -113,7 +121,7 @@ const api = {
       name,
       email,
       password,
-      role: "user",
+      role,
       createdAt: new Date().toISOString(),
     };
 

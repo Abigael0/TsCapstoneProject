@@ -103,6 +103,7 @@ export default function AppRoutes() {
     currentUser,
     login,
     register,
+    registerAdmin,
   } = useAuth();
 
   /*
@@ -193,7 +194,7 @@ export default function AppRoutes() {
         path="/admin-signup"
         element={
           <AuthPage>
-            <AdminSignup />
+            <AdminSignup onAdminRegister={registerAdmin} />
           </AuthPage>
         }
       />

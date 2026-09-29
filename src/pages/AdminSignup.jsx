@@ -1,18 +1,20 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ShieldCheck } from "lucide-react";
 
 import Button from "../components/Button";
 import Input from "../components/Input";
 
-export default function AdminSignup() {
+export default function AdminSignup({ onAdminRegister }) {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
     email: "",
-    inviteCode: "",
     password: "",
+    confirmPassword: "",
   });
-  const [notice, setNotice] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -21,14 +23,36 @@ export default function AdminSignup() {
       ...previous,
       [name]: value,
     }));
-    setNotice("");
+    setError("");
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    setNotice(
-      "wrong official work email. Please contact your administrator for assistance."
-    );
+    setError("");
+
+    if (form.password.length < 8) {
+      setError("Password must contain at least 8 characters.");
+      return;
+    }
+
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await onAdminRegister({
+        name: form.name.trim(),
+        email: form.email.trim(),
+        password: form.password,
+      });
+      navigate("/admin");
+    } catch (signupError) {
+      setError(signupError.message || "Unable to create the admin account.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -45,14 +69,10 @@ export default function AdminSignup() {
 
             <div className="auth-header">
               <h2 id="admin-signup-title">Create an admin account</h2>
-              <p>Enter your official work email to continue.</p>
+              <p>Enter your official work email to continue</p>
             </div>
 
-            {notice && (
-              <div className="form-alert" role="alert">
-                {notice}
-              </div>
-            )}
+            {error && <div className="form-alert" role="alert">{error}</div>}
 
             <form onSubmit={handleSubmit}>
               <Input
@@ -65,12 +85,12 @@ export default function AdminSignup() {
                 required
               />
               <Input
-                label="Work email"
+                label="Work Email"
                 name="email"
                 type="email"
                 value={form.email}
                 onChange={handleChange}
-                placeholder="admin@company.com"
+                placeholder="you@example.com"
                 autoComplete="email"
                 required
               />
@@ -92,13 +112,17 @@ export default function AdminSignup() {
                 type="password"
                 value={form.confirmPassword}
                 onChange={handleChange}
-                placeholder="Minimum 8 characters"
+                placeholder="Repeat your password"
                 autoComplete="new-password"
                 minLength={8}
                 required
               />
 
-              <Button type="submit" className="auth-submit">
+              <Button
+                type="submit"
+                loading={loading}
+                className="auth-submit"
+              >
                 Create admin account
               </Button>
             </form>

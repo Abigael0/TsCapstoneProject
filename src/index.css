@@ -1754,6 +1754,17 @@ body:has(.signin-page) {
   line-height: 1.2;
 }
 
+.admin-demo-warning {
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  border: 1px solid #f4d28a;
+  border-radius: 9px;
+  background: #fffbeb;
+  color: #854d0e;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
 .admin-signup-signin {
   margin-top: 12px;
 }
