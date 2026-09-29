@@ -149,7 +149,7 @@ useEffect(() => {
               <thead>
                 <tr>
                   <th>Ticket</th>
-                  <th>Submitted by</th>
+                  <th>Submitted By</th>
                   <th>Subject</th>
                   <th>Category</th>
                   <th>Priority</th>
@@ -166,7 +166,7 @@ useEffect(() => {
                       <strong>{complaint.ticketNumber}</strong>
                     </td>
 
-                    <td>{complaint.submittedBy}</td>
+                    <td>{complaint.userId || complaint.submittedBy || "—"}</td>
 
                     <td>{complaint.subject}</td>
                     <td>{complaint.category}</td>
@@ -238,9 +238,9 @@ useEffect(() => {
 
             <div className="complaint-meta">
               <div>
-                <span>Submitted by</span>
+                <span>Submitted By</span>
                 <strong>
-                  {selectedComplaint.submittedBy}
+                  {selectedComplaint.userId || selectedComplaint.submittedBy || "—"}
                 </strong>
               </div>
 

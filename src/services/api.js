@@ -27,34 +27,73 @@ function generateLocalId(prefix) {
 
 function migrateAccountIdentifiers() {
   const users = readStorage(USERS_KEY);
-  const emailById = new Map();
+  const accountByIdentifier = new Map();
+  const usedUserIds = new Set();
   let usersChanged = false;
 
   users.forEach((user) => {
-    if (user.id) {
-      emailById.set(user.id, user.email.toLowerCase());
+    const previousId = user.id;
+    if (previousId) {
+      accountByIdentifier.set(previousId, user);
+    }
+
+    if (user.role === "admin") {
       delete user.id;
+      usersChanged ||= Boolean(previousId);
+      return;
+    }
+
+    if (!user.id || usedUserIds.has(user.id)) {
+      user.id = generateLocalId("USR");
       usersChanged = true;
     }
+
+    usedUserIds.add(user.id);
+    accountByIdentifier.set(user.email.toLowerCase(), user);
   });
 
   const session = readStorage(SESSION_KEY, null);
   let sessionChanged = false;
 
-  if (session?.id) {
-    const email = emailById.get(session.id);
-    if (email) session.email = email;
-    delete session.id;
-    sessionChanged = true;
+  if (session && !Array.isArray(session)) {
+    const account = users.find(
+      (user) => user.email.toLowerCase() === session.email?.toLowerCase()
+    );
+
+    if (account?.role === "admin") {
+      if ("id" in session) {
+        delete session.id;
+        sessionChanged = true;
+      }
+    } else if (account) {
+      if (session.id !== account.id) {
+        session.id = account.id;
+        sessionChanged = true;
+      }
+    }
+  } else if (Array.isArray(session)) {
+    localStorage.removeItem(SESSION_KEY);
   }
 
   const complaints = readStorage(COMPLAINTS_KEY, []);
   let complaintsChanged = false;
 
   complaints.forEach((complaint) => {
-    const email = emailById.get(complaint.submittedBy);
-    if (email) {
-      complaint.submittedBy = email;
+    const identifier = complaint.userId ?? complaint.submittedBy;
+    const account = accountByIdentifier.get(identifier) ??
+      accountByIdentifier.get(String(identifier ?? "").toLowerCase());
+
+    if (account?.role === "admin") {
+      if (complaint.userId) {
+        delete complaint.userId;
+        complaintsChanged = true;
+      }
+      if (complaint.submittedBy !== account.email.toLowerCase()) {
+        complaint.submittedBy = account.email.toLowerCase();
+        complaintsChanged = true;
+      }
+    } else if (account && complaint.userId !== account.id) {
+      complaint.userId = account.id;
       complaintsChanged = true;
     }
   });
@@ -82,13 +121,14 @@ const api = {
       throw new Error("Invalid email or password.");
     }
 
-const safeUser = users.map((user) => ({
-    id: user.id,
-  name: user.name,
-  email: user.email,
-  role: user.role,
-  createdAt: user.createdAt,
-}));
+    const safeUser = {
+      ...(user.role !== "admin" ? { id: user.id } : {}),
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt,
+    };
+
     writeStorage(SESSION_KEY, safeUser);
 
     return delay(safeUser);
@@ -117,27 +157,21 @@ const safeUser = users.map((user) => ({
       );
     }
 
-    // const user = {
-    //   name,
-    //   email,
-    //   password,
-    //   role,
-    //   createdAt: new Date().toISOString(),
-    // };
- const user = {
-  id: generateLocalId("USR"),
-  name,
-  email,
-  password,
-  role: "user",
-  createdAt: new Date().toISOString(),
-};
+    const user = {
+      ...(role !== "admin" ? { id: generateLocalId("USR") } : {}),
+      name,
+      email,
+      password,
+      role,
+      createdAt: new Date().toISOString(),
+    };
 
     users.push(user);
 
     writeStorage(USERS_KEY, users);
 
     const safeUser = {
+      ...(user.role !== "admin" ? { id: user.id } : {}),
       name: user.name,
       email: user.email,
       role: user.role,
@@ -167,6 +201,7 @@ const safeUser = users.map((user) => ({
     const users = readStorage(USERS_KEY);
 
     const safeUsers = users.map((user) => ({
+      ...(user.role !== "admin" ? { id: user.id } : {}),
       name: user.name,
       email: user.email,
       role: user.role,
@@ -224,9 +259,9 @@ const safeUser = users.map((user) => ({
     const complaint = {
       id: generateLocalId("CMP"),
       ticketNumber: `TKT-${Date.now()}`,
-      userId: user.id,
+      ...(user.role !== "admin" && user.id ? { userId: user.id } : {}),
+      ...(user.role === "admin" ? { submittedBy: user.email } : {}),
 
-      
       subject: data.subject,
       category: data.category,
       priority: data.priority,

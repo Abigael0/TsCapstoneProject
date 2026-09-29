@@ -1,4 +1,4 @@
-import { User, Mail, Shield } from "lucide-react";
+import { User, Mail, Shield, Fingerprint } from "lucide-react";
 
 export default function Profile({ user }) {
   if (!user) return null;
@@ -59,6 +59,18 @@ export default function Profile({ user }) {
             </div>
           </div>
 
+          {user.role !== "admin" && user.id && (
+            <div className="profile-row">
+              <div className="profile-icon">
+                <Fingerprint size={18} />
+              </div>
+
+              <div>
+                <span>User ID</span>
+                <code>{user.id}</code>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

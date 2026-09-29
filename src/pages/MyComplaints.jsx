@@ -35,9 +35,10 @@ export default function MyComplaints({
     () =>
       complaints.filter(
         (complaint) =>
-          complaint.submittedBy === user?.email?.toLowerCase()
+          complaint.userId === user.id ||
+          complaint.submittedBy === user.email?.toLowerCase()
       ),
-    [complaints, user?.email]
+    [complaints, user]
   );
 
   const filteredComplaints = useMemo(() => {

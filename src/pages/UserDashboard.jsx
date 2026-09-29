@@ -39,6 +39,7 @@ export default function UserDashboard({
 
     return complaints.filter(
       (complaint) =>
+        complaint.userId === user.id ||
         complaint.submittedBy === user.email?.toLowerCase()
     );
   }, [complaints, user]);

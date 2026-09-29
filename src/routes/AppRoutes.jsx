@@ -149,8 +149,18 @@ export default function AppRoutes() {
     }
   }
 
-  function viewComplaint(complaint) {
-    navigate(`/complaints/${complaint.id}`);
+  function viewComplaint(complaintOrId) {
+    const complaintId =
+      typeof complaintOrId === "object"
+        ? complaintOrId?.id
+        : complaintOrId;
+
+    if (complaintId == null || complaintId === "") {
+      console.error("Unable to view complaint: complaint ID is missing.");
+      return;
+    }
+
+    navigate(`/complaints/${encodeURIComponent(complaintId)}`);
   }
 
   return (
