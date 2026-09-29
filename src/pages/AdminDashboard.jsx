@@ -149,7 +149,7 @@ useEffect(() => {
               <thead>
                 <tr>
                   <th>Ticket</th>
-                  <th>User ID</th>
+                  <th>Submitted by</th>
                   <th>Subject</th>
                   <th>Category</th>
                   <th>Priority</th>
@@ -166,11 +166,7 @@ useEffect(() => {
                       <strong>{complaint.ticketNumber}</strong>
                     </td>
 
-                    <td>
-                      <span className="user-id">
-                        {complaint.submittedBy}
-                      </span>
-                    </td>
+                    <td>{complaint.submittedBy}</td>
 
                     <td>{complaint.subject}</td>
                     <td>{complaint.category}</td>
@@ -242,7 +238,7 @@ useEffect(() => {
 
             <div className="complaint-meta">
               <div>
-                <span>User ID</span>
+                <span>Submitted by</span>
                 <strong>
                   {selectedComplaint.submittedBy}
                 </strong>

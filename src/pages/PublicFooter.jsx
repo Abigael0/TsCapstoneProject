@@ -24,7 +24,7 @@ export default function PublicFooter() {
 
         <div className="footer-column">
           <h4>Account</h4>
-          <Link to="/login">Sign in</Link>
+          <Link to="/signin">Sign in</Link>
           <Link to="/register">Get started</Link>
         </div>
 

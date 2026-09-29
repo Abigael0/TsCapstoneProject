@@ -25,12 +25,52 @@ function generateLocalId(prefix) {
   return `${prefix}-${crypto.randomUUID()}`;
 }
 
+function migrateAccountIdentifiers() {
+  const users = readStorage(USERS_KEY);
+  const emailById = new Map();
+  let usersChanged = false;
+
+  users.forEach((user) => {
+    if (user.id) {
+      emailById.set(user.id, user.email.toLowerCase());
+      delete user.id;
+      usersChanged = true;
+    }
+  });
+
+  const session = readStorage(SESSION_KEY, null);
+  let sessionChanged = false;
+
+  if (session?.id) {
+    const email = emailById.get(session.id);
+    if (email) session.email = email;
+    delete session.id;
+    sessionChanged = true;
+  }
+
+  const complaints = readStorage(COMPLAINTS_KEY, []);
+  let complaintsChanged = false;
+
+  complaints.forEach((complaint) => {
+    const email = emailById.get(complaint.submittedBy);
+    if (email) {
+      complaint.submittedBy = email;
+      complaintsChanged = true;
+    }
+  });
+
+  if (usersChanged) writeStorage(USERS_KEY, users);
+  if (sessionChanged) writeStorage(SESSION_KEY, session);
+  if (complaintsChanged) writeStorage(COMPLAINTS_KEY, complaints);
+}
+
 const api = {
   // -----------------------------
   // Authentication
   // -----------------------------
 
   async login({ email, password }) {
+    migrateAccountIdentifiers();
     const users = readStorage(USERS_KEY);
 
     const user = users.find(
@@ -42,20 +82,20 @@ const api = {
       throw new Error("Invalid email or password.");
     }
 
-    const safeUser = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      createdAt: user.createdAt,
-    };
-
+const safeUser = users.map((user) => ({
+    id: user.id,
+  name: user.name,
+  email: user.email,
+  role: user.role,
+  createdAt: user.createdAt,
+}));
     writeStorage(SESSION_KEY, safeUser);
 
     return delay(safeUser);
   },
 
   async register({ name, email, password }) {
+    migrateAccountIdentifiers();
     const users = readStorage(USERS_KEY);
 
     const existingUser = users.find(
@@ -69,21 +109,20 @@ const api = {
       );
     }
 
-    const user = {
-      id: generateLocalId("USR"),
-      name,
-      email,
-      password,
-      role: "user",
-      createdAt: new Date().toISOString(),
-    };
+ const user = {
+  id: generateLocalId("USR"),
+  name,
+  email,
+  password,
+  role: "user",
+  createdAt: new Date().toISOString(),
+};
 
     users.push(user);
 
     writeStorage(USERS_KEY, users);
 
     const safeUser = {
-      id: user.id,
       name: user.name,
       email: user.email,
       role: user.role,
@@ -96,6 +135,7 @@ const api = {
   },
 
   getStoredUser() {
+    migrateAccountIdentifiers();
     return readStorage(SESSION_KEY, null);
   },
 
@@ -108,10 +148,10 @@ const api = {
   // -----------------------------
 
   async getUsers() {
+    migrateAccountIdentifiers();
     const users = readStorage(USERS_KEY);
 
     const safeUsers = users.map((user) => ({
-      id: user.id,
       name: user.name,
       email: user.email,
       role: user.role,
@@ -126,6 +166,7 @@ const api = {
   // -----------------------------
 
   async getComplaints() {
+    migrateAccountIdentifiers();
     const complaints = readStorage(
       COMPLAINTS_KEY,
       []
@@ -148,6 +189,7 @@ const api = {
   },
 
   async createComplaint(data) {
+    migrateAccountIdentifiers();
     const complaints = readStorage(
       COMPLAINTS_KEY,
       []
@@ -167,8 +209,9 @@ const api = {
     const complaint = {
       id: generateLocalId("CMP"),
       ticketNumber: `TKT-${Date.now()}`,
-      submittedBy: user.id,
+      userId: user.id,
 
+      
       subject: data.subject,
       category: data.category,
       priority: data.priority,

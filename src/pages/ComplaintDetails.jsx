@@ -58,7 +58,7 @@ export default function ComplaintDetails({
 
   const isOwner =
     user?.role === "admin" ||
-    complaint.submittedBy === user?.id;
+    complaint.submittedBy === user?.email?.toLowerCase();
 
   if (!isOwner) {
     return (
@@ -154,7 +154,7 @@ export default function ComplaintDetails({
               <div>
                 <span>
                   <User size={15} />
-                  User ID
+                  Submitted by
                 </span>
                 <strong>{complaint.submittedBy || "—"}</strong>
               </div>

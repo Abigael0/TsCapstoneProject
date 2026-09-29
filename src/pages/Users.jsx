@@ -24,8 +24,7 @@ export default function Users({
     return users.filter(
       (user) =>
         user.name?.toLowerCase().includes(query) ||
-        user.email?.toLowerCase().includes(query) ||
-        user.id?.toLowerCase().includes(query)
+        user.email?.toLowerCase().includes(query)
     );
   }, [users, search]);
 
@@ -69,7 +68,6 @@ export default function Users({
             <table className="users-table">
               <thead>
                 <tr>
-                  <th>User ID</th>
                   <th>Name</th>
                   <th>Email</th>
                   <th>Role</th>
@@ -79,13 +77,7 @@ export default function Users({
 
               <tbody>
                 {filteredUsers.map((user) => (
-                  <tr key={user.id}>
-                    <td>
-                      <code className="user-id">
-                        {user.id}
-                      </code>
-                    </td>
-
+                  <tr key={user.email}>
                     <td>{user.name}</td>
 
                     <td>{user.email}</td>

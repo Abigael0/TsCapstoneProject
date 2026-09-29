@@ -1,8 +1,8 @@
-import "../index.css";
-import "../App.css";
 import { AuthProvider } from "./context/AuthContext";
 import AppRoutes from "./routes/AppRoutes";
 import { BrowserRouter } from "react-router-dom";
+import "./index.css";
+import "./App.css";
 
 export default function App() {
   return (
@@ -13,3 +13,4 @@ export default function App() {
     </BrowserRouter>
   );
 }
+

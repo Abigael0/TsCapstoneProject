@@ -59,16 +59,6 @@ export default function Profile({ user }) {
             </div>
           </div>
 
-          <div className="profile-row">
-            <div className="profile-icon">
-              <User size={18} />
-            </div>
-
-            <div>
-              <span>User ID</span>
-              <code>{user.id}</code>
-            </div>
-          </div>
         </div>
       </div>
     </section>

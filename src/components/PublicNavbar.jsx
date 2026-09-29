@@ -16,7 +16,7 @@ export default function PublicNavbar() {
         </nav>
 
         <div className="public-nav-actions">
-          <Link to="/login" className="public-nav-signin">
+          <Link to="/signin" className="public-nav-signin">
             Sign in
           </Link>
 
