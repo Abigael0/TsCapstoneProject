@@ -10,25 +10,23 @@ export default function AdminDashboard() {
   const [resolving, setResolving] = useState(false);
   const [error, setError] = useState("");
 
-  async function loadComplaints() {
+useEffect(() => {
+  async function fetchComplaints() {
     try {
-      setLoading(true);
       setError("");
 
       const data = await api.getComplaints();
+
       setComplaints(data);
     } catch (err) {
-      setError(
-        err.message || "Unable to load complaints."
-      );
+      setError(err.message || "Unable to load complaints.");
     } finally {
       setLoading(false);
     }
   }
 
-  useEffect(() => {
-    loadComplaints();
-  }, []);
+  fetchComplaints();
+}, []);
 
   function openComplaint(complaint) {
     setSelectedComplaint(complaint);
@@ -47,11 +45,10 @@ export default function AdminDashboard() {
       setResolving(true);
       setError("");
 
-      const updatedComplaint =
-        await api.resolveComplaint(
-          selectedComplaint.id,
-          feedback.trim()
-        );
+      const updatedComplaint = await api.resolveComplaint(
+        selectedComplaint.id,
+        feedback.trim()
+      );
 
       setComplaints((previous) =>
         previous.map((complaint) =>
@@ -63,9 +60,7 @@ export default function AdminDashboard() {
 
       setSelectedComplaint(updatedComplaint);
     } catch (err) {
-      setError(
-        err.message || "Unable to resolve complaint."
-      );
+      setError(err.message || "Unable to resolve complaint.");
     } finally {
       setResolving(false);
     }
@@ -100,8 +95,7 @@ export default function AdminDashboard() {
         <div>
           <h1>Admin Dashboard</h1>
           <p>
-            Manage complaints and respond to submitted
-            requests.
+            Manage complaints and respond to submitted requests.
           </p>
         </div>
       </div>
@@ -138,9 +132,7 @@ export default function AdminDashboard() {
         <div className="section-header">
           <div>
             <h2>All Complaints</h2>
-            <p>
-              Review complaints submitted by users.
-            </p>
+            <p>Review complaints submitted by users.</p>
           </div>
         </div>
 
@@ -148,8 +140,7 @@ export default function AdminDashboard() {
           <div className="empty-state">
             <h3>No complaints yet</h3>
             <p>
-              Complaints submitted by users will appear
-              here.
+              Complaints submitted by users will appear here.
             </p>
           </div>
         ) : (
@@ -172,15 +163,12 @@ export default function AdminDashboard() {
                 {complaints.map((complaint) => (
                   <tr key={complaint.id}>
                     <td>
-                      <strong>
-                        {complaint.ticketNumber}
-                      </strong>
+                      <strong>{complaint.ticketNumber}</strong>
                     </td>
 
                     <td>{complaint.submittedBy}</td>
 
                     <td>{complaint.subject}</td>
-
                     <td>{complaint.category}</td>
 
                     <td>
@@ -194,9 +182,7 @@ export default function AdminDashboard() {
                     </td>
 
                     <td>
-                      <StatusBadge
-                        status={complaint.status}
-                      />
+                      <StatusBadge status={complaint.status} />
                     </td>
 
                     <td>
@@ -209,9 +195,7 @@ export default function AdminDashboard() {
                       <button
                         type="button"
                         className="button button-secondary"
-                        onClick={() =>
-                          openComplaint(complaint)
-                        }
+                        onClick={() => openComplaint(complaint)}
                       >
                         View
                       </button>
@@ -231,9 +215,7 @@ export default function AdminDashboard() {
         >
           <div
             className="modal complaint-modal"
-            onClick={(event) =>
-              event.stopPropagation()
-            }
+            onClick={(event) => event.stopPropagation()}
           >
             <div className="modal-header">
               <div>
@@ -241,9 +223,7 @@ export default function AdminDashboard() {
                   {selectedComplaint.ticketNumber}
                 </span>
 
-                <h2>
-                  {selectedComplaint.subject}
-                </h2>
+                <h2>{selectedComplaint.subject}</h2>
               </div>
 
               <button
@@ -288,9 +268,7 @@ export default function AdminDashboard() {
 
             <div className="complaint-description">
               <h3>Description</h3>
-              <p>
-                {selectedComplaint.description}
-              </p>
+              <p>{selectedComplaint.description}</p>
             </div>
 
             <div className="complaint-date">
@@ -300,8 +278,7 @@ export default function AdminDashboard() {
               ).toLocaleString()}
             </div>
 
-            {selectedComplaint.status !==
-              "Resolved" && (
+            {selectedComplaint.status !== "Resolved" && (
               <div className="feedback-section">
                 <label htmlFor="admin-feedback">
                   Feedback to user
@@ -330,11 +307,9 @@ export default function AdminDashboard() {
               </div>
             )}
 
-            {selectedComplaint.status ===
-              "Resolved" && (
+            {selectedComplaint.status === "Resolved" && (
               <div className="resolved-feedback">
                 <h3>Resolution Feedback</h3>
-
                 <p>
                   {selectedComplaint.feedback ||
                     "No feedback was provided."}

@@ -82,13 +82,13 @@ const api = {
       throw new Error("Invalid email or password.");
     }
 
-    const safeUser = {
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      createdAt: user.createdAt,
-    };
-
+const safeUser = users.map((user) => ({
+    id: user.id,
+  name: user.name,
+  email: user.email,
+  role: user.role,
+  createdAt: user.createdAt,
+}));
     writeStorage(SESSION_KEY, safeUser);
 
     return delay(safeUser);
@@ -117,13 +117,21 @@ const api = {
       );
     }
 
-    const user = {
-      name,
-      email,
-      password,
-      role,
-      createdAt: new Date().toISOString(),
-    };
+    // const user = {
+    //   name,
+    //   email,
+    //   password,
+    //   role,
+    //   createdAt: new Date().toISOString(),
+    // };
+ const user = {
+  id: generateLocalId("USR"),
+  name,
+  email,
+  password,
+  role: "user",
+  createdAt: new Date().toISOString(),
+};
 
     users.push(user);
 
@@ -216,8 +224,9 @@ const api = {
     const complaint = {
       id: generateLocalId("CMP"),
       ticketNumber: `TKT-${Date.now()}`,
-      submittedBy: user.email.toLowerCase(),
+      userId: user.id,
 
+      
       subject: data.subject,
       category: data.category,
       priority: data.priority,

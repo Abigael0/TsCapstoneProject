@@ -2493,3 +2493,697 @@ body:has(.signin-page) {
     display: none;
   }
 }
+
+/* =========================================================
+   APP SHELL
+   Authenticated dashboard layout
+   ========================================================= */
+
+.app-shell {
+  min-height: 100vh;
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+/* Desktop sidebar */
+.app-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1100;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 260px;
+  height: 100vh;
+
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+}
+
+/* Sidebar header */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  min-height: 76px;
+  padding: 18px 20px;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.sidebar-header .brand-mark {
+  display: grid;
+  place-items: center;
+
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+
+  color: #2563eb;
+  background: #eff6ff;
+  border-radius: 10px;
+}
+
+.sidebar-header .brand-mark svg {
+  width: 22px;
+  height: 22px;
+}
+
+.brand-name {
+  margin: 0;
+  color: #0f172a;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.brand-subtitle {
+  margin: 3px 0 0;
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.sidebar-close {
+  display: none;
+}
+
+/* Sidebar navigation */
+.sidebar-nav {
+  flex: 1;
+  padding: 24px 14px;
+  overflow-y: auto;
+}
+
+.sidebar-label {
+  margin: 0 10px 10px;
+
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+
+  color: #475569;
+  border-radius: 9px;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.sidebar-link:hover {
+  color: #1e40af;
+  background: #f8fafc;
+}
+
+.sidebar-link.active {
+  color: #1d4ed8;
+  background: #eff6ff;
+  font-weight: 600;
+}
+
+.sidebar-link svg {
+  flex-shrink: 0;
+}
+
+/* Sidebar footer */
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  min-width: 0;
+  margin-bottom: 14px;
+}
+
+.user-avatar {
+  display: grid;
+  place-items: center;
+
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+
+  color: #1d4ed8;
+  background: #eff6ff;
+  border-radius: 50%;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sidebar-user-info {
+  min-width: 0;
+}
+
+.sidebar-user-info p {
+  margin: 0;
+
+  overflow: hidden;
+
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-user-info span {
+  display: block;
+  margin-top: 2px;
+
+  color: #64748b;
+  font-size: 11px;
+  text-transform: capitalize;
+}
+
+.signout-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 12px;
+
+  color: #475569;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.signout-button:hover {
+  color: #dc2626;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+/* =========================================================
+   TOP MOBILE NAVBAR
+   ========================================================= */
+
+.mobile-navbar {
+  display: none;
+}
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.app-content {
+  min-height: 100vh;
+  margin-left: 260px;
+  padding-top: 0;
+}
+
+/* =========================================================
+   MOBILE SIDEBAR
+   ========================================================= */
+
+.sidebar-backdrop {
+  display: none;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 767px) {
+  /* Mobile top bar */
+  .mobile-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+    min-height: 64px;
+    padding: 0 16px;
+
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .mobile-menu-button {
+    display: grid;
+    place-items: center;
+
+    width: 40px;
+    height: 40px;
+    padding: 0;
+
+    color: #334155;
+    background: transparent;
+    border: 0;
+    border-radius: 8px;
+
+    cursor: pointer;
+  }
+
+  .mobile-menu-button:hover {
+    background: #f1f5f9;
+  }
+
+  .mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .mobile-brand .brand-mark {
+    display: grid;
+    place-items: center;
+
+    width: 32px;
+    height: 32px;
+
+    color: #2563eb;
+    background: #eff6ff;
+    border-radius: 8px;
+  }
+
+  .mobile-brand .brand-mark svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  /* Sidebar becomes a drawer */
+  .app-sidebar {
+    z-index: 1200;
+
+    width: min(280px, 85vw);
+
+    transform: translateX(-100%);
+
+    box-shadow: 8px 0 30px rgba(15, 23, 42, 0.12);
+
+    transition: transform 0.22s ease;
+  }
+
+  .app-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-close {
+    display: grid;
+    place-items: center;
+
+    width: 34px;
+    height: 34px;
+    margin-left: auto;
+    padding: 0;
+
+    color: #64748b;
+    background: transparent;
+    border: 0;
+    border-radius: 7px;
+
+    cursor: pointer;
+  }
+
+  .sidebar-close:hover {
+    color: #0f172a;
+    background: #f1f5f9;
+  }
+
+  /* Darkened area behind open sidebar */
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1150;
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 0;
+
+    background: rgba(15, 23, 42, 0.35);
+    border: 0;
+
+    cursor: pointer;
+  }
+
+  /* Content uses full screen on mobile */
+  .app-content {
+    min-height: calc(100vh - 64px);
+    margin-left: 0;
+  }
+}
+
+/* =========================================================
+   COMPLAINT FORM
+   ========================================================= */
+
+.form-page {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 28px 32px 48px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  margin: 0 0 24px;
+  padding: 0;
+
+  color: #475569;
+  background: transparent;
+  border: 0;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.back-link:hover {
+  color: #2563eb;
+}
+
+.form-page-header {
+  margin-bottom: 30px;
+}
+
+.form-page-header .eyebrow {
+  margin: 0 0 8px;
+
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.form-page-header h1 {
+  margin: 0 0 10px;
+
+  color: #0f172a;
+  font-size: clamp(32px, 4vw, 46px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.form-page-header > p:last-child {
+  max-width: 720px;
+  margin: 0;
+
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* Form card */
+.complaint-form {
+  width: 100%;
+  padding: 32px;
+
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.03),
+    0 8px 30px rgba(15, 23, 42, 0.04);
+}
+
+/* Inputs */
+.input-group {
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 7px;
+
+  color: #252525;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.input-field {
+  display: block;
+
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+
+  border: 1px solid var(--border);
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #202020;
+
+  font: inherit;
+  font-size: 14px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.input-field::placeholder {
+  color: #999999;
+}
+
+.input-field:hover {
+  border-color: #b8b8b8;
+}
+
+.input-field:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+textarea.input-field {
+  min-height: 160px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+select.input-field {
+  cursor: pointer;
+}
+
+.input-field-error {
+  border-color: #c53030;
+}
+
+.input-helper {
+  margin: 6px 0 0;
+
+  color: #777777;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.input-error {
+  margin: 6px 0 0;
+
+  color: #c53030;
+  font-size: 12px;
+}
+
+.required-mark {
+  margin-left: 3px;
+  color: #c53030;
+}
+
+/* Two-column fields */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* Error message */
+.form-alert {
+  margin-bottom: 24px;
+  padding: 12px 14px;
+
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Form buttons */
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+
+  margin-top: 30px;
+  padding-top: 24px;
+
+  border-top: 1px solid #e2e8f0;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 42px;
+  padding: 10px 18px;
+
+  border: 1px solid transparent;
+  border-radius: 8px;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.button-primary {
+  background: #2563eb;
+  color: #ffffff;
+  border: 1px solid #2563eb;
+}
+
+.button-primary:hover:not(:disabled) {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  opacity: 1;
+}
+
+.button-secondary {
+  background: #ffffff;
+  color: #252525;
+  border: 1px solid #cbd5e1;
+}
+
+.button-secondary:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.button-medium {
+  min-height: 42px;
+  padding: 10px 18px;
+}
+
+.button-spinner {
+  animation: button-spin 0.8s linear infinite;
+}
+
+@keyframes button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   COMPLAINT FORM — MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) {
+  .form-page {
+    padding: 20px 16px 32px;
+  }
+
+  .form-page-header {
+    margin-bottom: 22px;
+  }
+
+  .form-page-header h1 {
+    font-size: 32px;
+  }
+
+  .form-page-header > p:last-child {
+    font-size: 13px;
+  }
+
+  .complaint-form {
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .form-actions .button {
+    width: 100%;
+  }
+}

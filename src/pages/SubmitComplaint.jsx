@@ -141,6 +141,7 @@ export default function SubmitComplaint({
             value={form.category}
             onChange={handleChange}
             options={categoryOptions}
+            placeholder="Select category"
             required
           />
 
@@ -150,6 +151,7 @@ export default function SubmitComplaint({
             value={form.priority}
             onChange={handleChange}
             options={priorityOptions}
+            placeholder="Select priority"
             required
           />
         </div>
