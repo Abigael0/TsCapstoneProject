@@ -14,7 +14,9 @@ export default function Register({ onRegister }) {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
+    userName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -37,8 +39,8 @@ export default function Register({ onRegister }) {
     event.preventDefault();
     setError("");
 
-    if (form.password.length < 8) {
-      setError("Password must contain at least 8 characters.");
+    if (form.password.length < 6 || form.confirmPassword.length > 20) {
+      setError("Password must contain at least 6 characters, and less than 20.");
       return;
     }
 
@@ -51,7 +53,9 @@ export default function Register({ onRegister }) {
       setLoading(true);
 
       await onRegister({
-        name: form.name.trim(),
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
+        userName: form.userName.trim(),
         email: form.email.trim(),
         password: form.password,
       });
@@ -123,13 +127,37 @@ export default function Register({ onRegister }) {
             </fieldset>
 
             <form onSubmit={handleSubmit}>
+              <div className="form-grid">
               <Input
-                label="Full name"
-                name="name"
-                value={form.name}
+                label="First name"
+                name="firstName"
+                value={form.firstName}
                 onChange={handleChange}
-                placeholder="Joe Smith"
-                autoComplete="name"
+                placeholder="Joe"
+                autoComplete="given-name"
+                required
+              />
+
+              <Input
+                label="Last name"
+                name="lastName"
+                value={form.lastName}
+                onChange={handleChange}
+                placeholder="Smith"
+                autoComplete="family-name"
+                required
+              />
+              </div>
+
+              <Input
+                label="Username"
+                name="userName"
+                value={form.userName}
+                onChange={handleChange}
+                placeholder="joesmith"
+                autoComplete="username"
+                minLength={2}
+                maxLength={20}
                 required
               />
 
@@ -151,9 +179,10 @@ export default function Register({ onRegister }) {
                   type={showPassword ? "text" : "password"}
                   value={form.password}
                   onChange={handleChange}
-                  placeholder="Minimum 8 characters"
+                  placeholder="Minimum 6 characters"
                   autoComplete="new-password"
-                  minLength={8}
+                  minLength={6}
+                  maxLength={20}
                   required
                 />
                 <button
@@ -176,7 +205,7 @@ export default function Register({ onRegister }) {
                   onChange={handleChange}
                   placeholder="Repeat your password"
                   autoComplete="new-password"
-                  minLength={8}
+                  minLength={6}
                   required
                 />
                 <button

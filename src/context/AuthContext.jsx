@@ -1,6 +1,7 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useState,
 } from "react";
 
@@ -8,9 +9,34 @@ import api from "../services/api";
 
 const AuthContext = createContext(null);
 
+const TOKEN_KEY = "complaintshq_token";
+
 export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(() => api.getStoredUser());
-  const [isLoading] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function restoreSession() {
+      const token = localStorage.getItem(TOKEN_KEY);
+
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const user = await api.getCurrentUser();
+        setCurrentUser(user);
+      } catch {
+        api.logout();
+        setCurrentUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    restoreSession();
+  }, []);
 
   async function login(credentials) {
     const user = await api.login(credentials);
@@ -28,14 +54,6 @@ export function AuthProvider({ children }) {
     return user;
   }
 
-  async function registerAdmin(userData) {
-    const user = await api.registerAdmin(userData);
-
-    setCurrentUser(user);
-
-    return user;
-  }
-
   function logout() {
     api.logout();
     setCurrentUser(null);
@@ -47,7 +65,6 @@ export function AuthProvider({ children }) {
     isLoading,
     login,
     register,
-    registerAdmin,
     logout,
   };
 

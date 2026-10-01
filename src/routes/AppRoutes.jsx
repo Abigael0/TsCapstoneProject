@@ -1,11 +1,8 @@
-import { useEffect, useState } from "react";
-import api from "../services/api";
-
+import { useNavigate } from "react-router-dom";
 import {
   Navigate,
   Route,
   Routes,
-  useNavigate,
 } from "react-router-dom";
 
 import AppShell from "../components/AppShell";
@@ -58,7 +55,7 @@ function AdminRoute({ children }) {
     return <Navigate to="/signin" replace />;
   }
 
-  if (currentUser.role !== "admin") {
+  if (currentUser.role !== "ADMIN") {
     return <Navigate to="/dashboard" replace />;
   }
 
@@ -72,7 +69,7 @@ function AuthPage({ children }) {
     return (
       <Navigate
         to={
-          currentUser?.role === "admin"
+          currentUser?.role === "ADMIN"
             ? "/admin"
             : "/dashboard"
         }
@@ -107,66 +104,11 @@ export default function AppRoutes() {
     registerAdmin,
   } = useAuth();
 
-  /*
-   * Temporary frontend data source.
-   * Once the backend is connected, complaints should come from
-   * the backend instead of being maintained inside AppRoutes.
-   */
-  const [complaints, setComplaints] = useState([]);
-
-  useEffect(() => {
-    async function loadComplaints() {
-      try {
-        const data = await api.getComplaints();
-        setComplaints(data);
-      } catch (error) {
-        console.error("Unable to load complaints:", error);
-      }
-    }
-
-    if (currentUser) {
-      loadComplaints();
-    }
-  }, [currentUser]);
-
-  async function handleComplaintSubmit(data) {
-    try {
-      const complaint = await api.createComplaint(data);
-
-      setComplaints((previous) => [
-        complaint,
-        ...previous,
-      ]);
-
-      return complaint;
-    } catch (error) {
-      console.error(
-        "Unable to create complaint:",
-        error
-      );
-
-      throw error;
-    }
-  }
-
-  function viewComplaint(complaintOrId) {
-    const complaintId =
-      typeof complaintOrId === "object"
-        ? complaintOrId?.id
-        : complaintOrId;
-
-    if (complaintId == null || complaintId === "") {
-      console.error("Unable to view complaint: complaint ID is missing.");
-      return;
-    }
-
-    navigate(`/complaints/${encodeURIComponent(complaintId)}`);
-  }
-
   return (
     <Routes>
       {/* Public */}
       <Route path="/" element={<Home />} />
+
       <Route path="/about" element={<About />} />
 
       <Route
@@ -177,6 +119,7 @@ export default function AppRoutes() {
           </AuthPage>
         }
       />
+
       <Route
         path="/login"
         element={
@@ -194,6 +137,7 @@ export default function AppRoutes() {
           </AuthPage>
         }
       />
+
       <Route
         path="/verify-otp"
         element={
@@ -202,6 +146,7 @@ export default function AppRoutes() {
           </AuthPage>
         }
       />
+
       <Route
         path="/admin-signup"
         element={
@@ -219,11 +164,16 @@ export default function AppRoutes() {
             <UserLayout>
               <UserDashboard
                 user={currentUser}
-                complaints={complaints}
                 onNewComplaint={() =>
                   navigate("/complaints/new")
                 }
-                onViewComplaint={viewComplaint}
+                onViewComplaint={(complaint) =>
+                  navigate(
+                    `/complaints/${encodeURIComponent(
+                      complaint.complaintId
+                    )}`
+                  )
+                }
               />
             </UserLayout>
           </ProtectedRoute>
@@ -235,9 +185,7 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <UserLayout>
-              <SubmitComplaint
-                onSubmit={handleComplaintSubmit}
-              />
+              <SubmitComplaint />
             </UserLayout>
           </ProtectedRoute>
         }
@@ -250,8 +198,13 @@ export default function AppRoutes() {
             <UserLayout>
               <MyComplaints
                 user={currentUser}
-                complaints={complaints}
-                onViewComplaint={viewComplaint}
+                onViewComplaint={(complaint) =>
+                  navigate(
+                    `/complaints/${encodeURIComponent(
+                      complaint.complaintId
+                    )}`
+                  )
+                }
               />
             </UserLayout>
           </ProtectedRoute>
@@ -263,10 +216,7 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <UserLayout>
-              <ComplaintDetails
-                user={currentUser}
-                complaints={complaints}
-              />
+              <ComplaintDetails user={currentUser} />
             </UserLayout>
           </ProtectedRoute>
         }

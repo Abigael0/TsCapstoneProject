@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import Button from "../components/Button";
 import Input from "../components/Input";
+import api from "../services/api";
 
 const categoryOptions = [
   { value: "Service", label: "Service" },
@@ -20,13 +21,11 @@ const priorityOptions = [
   { value: "High", label: "High" },
 ];
 
-export default function SubmitComplaint({
-  onSubmit,
-}) {
+export default function SubmitComplaint() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    subject: "",
+    title: "",
     category: "",
     priority: "",
     description: "",
@@ -44,14 +43,12 @@ export default function SubmitComplaint({
     }));
   }
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-    setError("");
+ async function handleSubmit(event) {
+  event.preventDefault();
 
-    if (!form.subject.trim()) {
-      setError("Please enter a complaint subject.");
-      return;
-    }
+  console.log("SUBMIT HANDLER FIRED");
+
+  setError("");
 
     if (!form.category) {
       setError("Please select a category.");
@@ -68,30 +65,42 @@ export default function SubmitComplaint({
       return;
     }
 
-    try {
-      setLoading(true);
+   try {
+  setLoading(true);
 
-      const createdComplaint = await onSubmit?.({
-        subject: form.subject.trim(),
-        category: form.category,
-        priority: form.priority,
-        description: form.description.trim(),
-      });
+  console.log("ABOUT TO CALL API");
 
-      if (createdComplaint?.id) {
-        navigate(`/complaints/${createdComplaint.id}`);
-      } else {
-        navigate("/dashboard");
-      }
-    } catch (submitError) {
-      setError(
-        submitError.message ||
-          "Unable to submit your complaint. Please try again."
-      );
-    } finally {
-      setLoading(false);
-    }
+  const response = await api.createComplaint({
+    title: form.title.trim(),
+    category: form.category,
+    priority: form.priority,
+    description: form.description.trim(),
+  });
+
+  console.log("API RESPONSE:", response);
+
+  const createdComplaint = response?.complaint ?? response;
+
+  if (createdComplaint?.complaintId) {
+    navigate(
+      `/complaints/${encodeURIComponent(
+        createdComplaint.complaintId
+      )}`
+    );
+  } else {
+    navigate("/dashboard");
   }
+} catch (submitError) {
+  console.error("COMPLAINT SUBMISSION ERROR:", submitError);
+
+  setError(
+    submitError.message ||
+      "Unable to submit your complaint. Please try again."
+  );
+} finally {
+  setLoading(false);
+}
+}
 
   return (
     <section className="form-page">
@@ -127,8 +136,8 @@ export default function SubmitComplaint({
 
         <Input
           label="Subject"
-          name="subject"
-          value={form.subject}
+          name="title"
+          value={form.title}
           onChange={handleChange}
           placeholder="Briefly describe the issue"
           required
@@ -188,4 +197,4 @@ export default function SubmitComplaint({
       </form>
     </section>
   );
-}
+ }

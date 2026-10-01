@@ -35,8 +35,8 @@ export default function MyComplaints({
     () =>
       complaints.filter(
         (complaint) =>
-          complaint.userId === user.id ||
-          complaint.submittedBy === user.email?.toLowerCase()
+          String(complaint.submittedBy) === String(user?.id)
+
       ),
     [complaints, user]
   );
@@ -50,7 +50,7 @@ export default function MyComplaints({
 
       const matchesSearch =
         !query ||
-        complaint.subject?.toLowerCase().includes(query) ||
+        complaint.title?.toLowerCase().includes(query) ||
         complaint.ticketNumber?.toLowerCase().includes(query) ||
         complaint.category?.toLowerCase().includes(query);
 
@@ -116,7 +116,7 @@ export default function MyComplaints({
           <div className="complaint-card-list">
             {filteredComplaints.map((complaint) => (
               <ComplaintCard
-                key={complaint.id}
+                key={complaint._id}
                 complaint={complaint}
                 onView={onViewComplaint}
               />
@@ -140,16 +140,16 @@ export default function MyComplaints({
 
                 <tbody>
                   {filteredComplaints.map((complaint) => (
-                    <tr key={complaint.id}>
+                    <tr key={complaint._id}>
                       <td>
                         <span className="ticket-number">
-                          {complaint.ticketNumber || complaint.id}
+                          {complaint.complaintId || complaint._id}
                         </span>
                       </td>
 
                       <td>
                         <span className="complaint-subject">
-                          {complaint.subject}
+                          {complaint.title}
                         </span>
                       </td>
 
