@@ -1,4 +1,5 @@
-const API_BASE_URL = "http://localhost:8000/api";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
 const TOKEN_KEY = "complaintshq_token";
 
@@ -31,19 +32,42 @@ async function request(endpoint, options = {}) {
     headers,
   });
 
-  let data;
+  const responseBody = await response.text();
+  let data = null;
 
-  try {
-    data = await response.json();
-  } catch {
-    data = null;
+  if (responseBody) {
+    try {
+      data = JSON.parse(responseBody);
+    } catch {
+      data = responseBody;
+    }
   }
 
   if (!response.ok) {
+    const validationErrors =
+      typeof data?.errors === "string"
+        ? data.errors
+        : Array.isArray(data?.errors)
+          ? data.errors
+              .map((error) =>
+                typeof error === "string" ? error : error?.message || error?.msg
+              )
+              .filter(Boolean)
+              .join(" ")
+          : data?.errors && typeof data.errors === "object"
+            ? Object.values(data.errors)
+                .flat()
+                .filter((error) => typeof error === "string")
+                .join(" ")
+            : null;
+
     throw new Error(
-      data?.message ||
+      (typeof data === "string" && data) ||
+        data?.message ||
         data?.error ||
-        "Something went wrong. Please try again."
+        data?.detail ||
+        validationErrors ||
+        `Request failed with status ${response.status}.`
     );
   }
 

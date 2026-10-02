@@ -43,15 +43,17 @@ export default function SubmitComplaint() {
     }));
   }
 
- async function handleSubmit(event) {
-  event.preventDefault();
-
-  console.log("SUBMIT HANDLER FIRED");
-
-  setError("");
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setError("");
 
     if (!form.category) {
       setError("Please select a category.");
+      return;
+    }
+
+    if (!form.title.trim()) {
+      setError("Please enter a subject.");
       return;
     }
 
@@ -65,42 +67,38 @@ export default function SubmitComplaint() {
       return;
     }
 
-   try {
-  setLoading(true);
+    try {
+      setLoading(true);
 
-  console.log("ABOUT TO CALL API");
+      const response = await api.createComplaint({
+        title: form.title.trim(),
+        category: form.category,
+        priority: form.priority,
+        description: form.description.trim(),
+      });
 
-  const response = await api.createComplaint({
-    title: form.title.trim(),
-    category: form.category,
-    priority: form.priority,
-    description: form.description.trim(),
-  });
+      const createdComplaint = response?.complaint ?? response;
 
-  console.log("API RESPONSE:", response);
+      if (createdComplaint?.complaintId) {
+        navigate(
+          `/complaints/${encodeURIComponent(
+            createdComplaint.complaintId
+          )}`
+        );
+      } else {
+        navigate("/dashboard");
+      }
+    } catch (submitError) {
+      console.error("COMPLAINT SUBMISSION ERROR:", submitError);
 
-  const createdComplaint = response?.complaint ?? response;
-
-  if (createdComplaint?.complaintId) {
-    navigate(
-      `/complaints/${encodeURIComponent(
-        createdComplaint.complaintId
-      )}`
-    );
-  } else {
-    navigate("/dashboard");
+      setError(
+        submitError.message ||
+          "Unable to submit your complaint. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   }
-} catch (submitError) {
-  console.error("COMPLAINT SUBMISSION ERROR:", submitError);
-
-  setError(
-    submitError.message ||
-      "Unable to submit your complaint. Please try again."
-  );
-} finally {
-  setLoading(false);
-}
-}
 
   return (
     <section className="form-page">
@@ -197,4 +195,4 @@ export default function SubmitComplaint() {
       </form>
     </section>
   );
- }
+}
