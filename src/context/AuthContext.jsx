@@ -54,6 +54,14 @@ export function AuthProvider({ children }) {
     return user;
   }
 
+  async function registerAdmin(adminData) {
+  const user = await api.registerAdmin(adminData);
+
+  setCurrentUser(user);
+
+  return user;
+}
+
   function logout() {
     api.logout();
     setCurrentUser(null);
@@ -65,6 +73,7 @@ export function AuthProvider({ children }) {
     isLoading,
     login,
     register,
+    registerAdmin,
     logout,
   };
 

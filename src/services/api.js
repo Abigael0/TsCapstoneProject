@@ -120,6 +120,23 @@ const api = {
     return data.user;
   },
 
+  async registerAdmin({ name, email, password }) {
+  const data = await request("/auth/admin/register", {
+    method: "POST",
+    body: JSON.stringify({
+      name: name.trim(),
+      email: email.trim(),
+      password,
+    }),
+  });
+
+  if (data.token) {
+    saveToken(data.token);
+  }
+
+  return data.user;
+},
+
   async getCurrentUser() {
     const data = await request("/auth/me", {
       method: "GET",
