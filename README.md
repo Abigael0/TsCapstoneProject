@@ -1,16 +1,35 @@
-# React + Vite
+# Complaint Management Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository contains both parts of the application:
 
-Currently, two official plugins are available:
+- `complaint-management-api/`: Node.js, Express, and MongoDB backend.
+- `complaint-management-portal/`: React and Vite frontend.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Run locally
 
-## React Compiler
+Install and start each application in a separate terminal.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+cd complaint-management-api
+npm install
+cp .env.example .env
+# Configure your MongoDB URI, JWT secret, and optional admin signup code.
+npm run dev
+```
 
-## Expanding the ESLint configuration
+```bash
+cd complaint-management-portal
+npm install
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The frontend defaults to `http://localhost:8000/api`. If your backend uses
+another port, set `VITE_API_URL` in `complaint-management-portal/.env`.
+
+Private `.env` files, dependencies, and generated build output are excluded
+from Git. See each application's README for its features and configuration.
+
+## Verify
+
+Run `npm test` in both application folders. In the frontend folder, also run
+`npm run lint` and `npm run build`.
