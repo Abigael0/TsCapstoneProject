@@ -7,10 +7,15 @@ const statusClasses = {
 };
 
 export default function StatusBadge({ status }) {
+  const displayStatus = status
+    ?.replaceAll("_", " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (character) => character.toUpperCase());
+
   return (
-    <span className={`status-badge ${statusClasses[status] || ""}`}>
+    <span className={`status-badge ${statusClasses[displayStatus] || ""}`}>
       <span className="status-dot" />
-      {status}
+      {displayStatus || status}
     </span>
   );
 }

@@ -24,6 +24,7 @@ import Users from "../pages/Users";
 import Profile from "../pages/Profile";
 
 import { useAuth } from "../context/AuthContext";
+import useMyComplaints from "../hooks/useMyComplaints";
 
 function LoadingScreen() {
   return (
@@ -91,6 +92,33 @@ function UserLayout({ children }) {
     >
       {children}
     </AppShell>
+  );
+}
+
+function UserDashboardPage({ onNewComplaint, onViewComplaint }) {
+  const { complaints, loading, error } = useMyComplaints();
+
+  return (
+    <UserDashboard
+      complaints={complaints}
+      loading={loading}
+      error={error}
+      onNewComplaint={onNewComplaint}
+      onViewComplaint={onViewComplaint}
+    />
+  );
+}
+
+function MyComplaintsPage({ onViewComplaint }) {
+  const { complaints, loading, error } = useMyComplaints();
+
+  return (
+    <MyComplaints
+      complaints={complaints}
+      loading={loading}
+      error={error}
+      onViewComplaint={onViewComplaint}
+    />
   );
 }
 
@@ -162,8 +190,7 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <UserLayout>
-              <UserDashboard
-                user={currentUser}
+              <UserDashboardPage
                 onNewComplaint={() =>
                   navigate("/complaints/new")
                 }
@@ -196,8 +223,7 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <UserLayout>
-              <MyComplaints
-                user={currentUser}
+              <MyComplaintsPage
                 onViewComplaint={(complaint) =>
                   navigate(
                     `/complaints/${encodeURIComponent(

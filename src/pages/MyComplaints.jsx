@@ -23,35 +23,37 @@ function formatDate(date) {
   });
 }
 
+function formatStatus(status) {
+  return status
+    ?.replaceAll("_", " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (character) => character.toUpperCase());
+}
+
 export default function MyComplaints({
-  user,
   complaints = [],
+  loading = false,
+  error = "",
   onViewComplaint,
 }) {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
 
-  const userComplaints = useMemo(
-    () =>
-      complaints.filter(
-        (complaint) =>
-          String(complaint.submittedBy) === String(user?.id)
-
-      ),
-    [complaints, user]
-  );
+  const userComplaints = complaints;
 
   const filteredComplaints = useMemo(() => {
     const query = search.trim().toLowerCase();
 
     return userComplaints.filter((complaint) => {
       const matchesStatus =
-        status === "All" || complaint.status === status;
+        status === "All" || formatStatus(complaint.status) === status;
 
       const matchesSearch =
         !query ||
         complaint.title?.toLowerCase().includes(query) ||
-        complaint.ticketNumber?.toLowerCase().includes(query) ||
+        (complaint.ticketNumber || complaint.complaintId)
+          ?.toLowerCase()
+          .includes(query) ||
         complaint.category?.toLowerCase().includes(query);
 
       return matchesStatus && matchesSearch;
@@ -97,18 +99,25 @@ export default function MyComplaints({
         </div>
       </div>
 
-      {filteredComplaints.length === 0 ? (
+      {error ? (
+        <div className="form-alert" role="alert">{error}</div>
+      ) : loading ? (
+        <div className="empty-state">Loading your complaints...</div>
+      ) : filteredComplaints.length === 0 ? (
         <div className="empty-state">
           <h2>
-            {userComplaints.length === 0
+            {loading
+              ? "Loading complaints..."
+              : userComplaints.length === 0
               ? "No complaints yet"
               : "No matching complaints"}
           </h2>
 
           <p>
-            {userComplaints.length === 0
+            {error ||
+              (userComplaints.length === 0
               ? "Your submitted complaints will appear here."
-              : "Try changing your search or status filter."}
+              : "Try changing your search or status filter.")}
           </p>
         </div>
       ) : (

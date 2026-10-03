@@ -16,6 +16,13 @@ const priorityClasses = {
   Low: "priority-low",
 };
 
+function formatStatus(status) {
+  return status
+    ?.replaceAll("_", " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (character) => character.toUpperCase());
+}
+
 function formatDate(date) {
   if (!date) return "—";
 
@@ -27,22 +34,15 @@ function formatDate(date) {
 }
 
 export default function UserDashboard({
-  user,
   complaints = [],
+  loading = false,
+  error = "",
   onNewComplaint,
   onViewComplaint,
 }) {
   const [filter, setFilter] = useState("All");
 
-  const myComplaints = useMemo(() => {
-    if (!user) return [];
-
-    return complaints.filter(
-      (complaint) =>
-        complaint.userId === user.id ||
-        complaint.submittedBy === user.email?.toLowerCase()
-    );
-  }, [complaints, user]);
+  const myComplaints = complaints;
 
   const visibleComplaints = useMemo(() => {
     if (filter === "All") {
@@ -50,7 +50,7 @@ export default function UserDashboard({
     }
 
     return myComplaints.filter(
-      (complaint) => complaint.status === filter
+      (complaint) => formatStatus(complaint.status) === filter
     );
   }, [myComplaints, filter]);
 
@@ -61,7 +61,7 @@ export default function UserDashboard({
 
     STATUSES.forEach((status) => {
       result[status] = myComplaints.filter(
-        (complaint) => complaint.status === status
+        (complaint) => formatStatus(complaint.status) === status
       ).length;
     });
 
@@ -105,6 +105,12 @@ export default function UserDashboard({
         </div>
       </header>
 
+      {error && (
+        <div className="form-alert" role="alert">
+          {error}
+        </div>
+      )}
+
       {/* Statistics */}
       <div className="dashboard-stats">
         {statistics.map((stat) => {
@@ -118,7 +124,7 @@ export default function UserDashboard({
               onClick={() => setFilter(stat.filter)}
             >
               <span className="stat-value">
-                {stat.value}
+                {loading ? "—" : stat.value}
               </span>
 
               <span className="stat-label">
@@ -147,7 +153,13 @@ export default function UserDashboard({
               </thead>
 
               <tbody>
-                {visibleComplaints.length === 0 ? (
+                {loading ? (
+                  <tr>
+                    <td colSpan="7" className="empty-table-cell">
+                      Loading your complaints...
+                    </td>
+                  </tr>
+                ) : visibleComplaints.length === 0 ? (
                   <tr>
                     <td
                       colSpan="7"
@@ -194,21 +206,21 @@ export default function UserDashboard({
                 ) : (
                   visibleComplaints.map((complaint) => (
                     <tr
-                      key={complaint.id}
+                      key={complaint._id || complaint.complaintId}
                       className="complaint-row"
                       onClick={() =>
-                        onViewComplaint?.(complaint.id)
+                        onViewComplaint?.(complaint)
                       }
                     >
                       <td>
                         <span className="ticket-number">
-                          {complaint.ticketNo}
+                          {complaint.complaintId || complaint._id}
                         </span>
                       </td>
 
                       <td>
                         <span className="complaint-subject">
-                          {complaint.subject}
+                          {complaint.title || complaint.subject}
                         </span>
                       </td>
 
@@ -230,7 +242,7 @@ export default function UserDashboard({
 
                       <td>
                         <StatusBadge
-                          status={complaint.status}
+                          status={formatStatus(complaint.status)}
                         />
                       </td>
 
@@ -246,7 +258,7 @@ export default function UserDashboard({
                           className="view-button"
                           onClick={(event) => {
                             event.stopPropagation();
-                            onViewComplaint?.(complaint.id);
+                            onViewComplaint?.(complaint);
                           }}
                         >
                           View

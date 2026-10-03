@@ -1,12 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import StatusBadge from "./StatusBadge";
 
-const priorityClasses = {
-  High: "priority-high",
-  Medium: "priority-medium",
-  Low: "priority-low",
-};
-
 function formatDate(date) {
   if (!date) return "—";
 
@@ -25,14 +19,17 @@ export default function ComplaintCard({
     <article className="complaint-card">
       <div className="complaint-card-header">
         <span className="ticket-number">
-          {complaint.ticketNumber || complaint.id}
+          {complaint.ticketNumber ||
+            complaint.complaintId ||
+            complaint.id ||
+            complaint._id}
         </span>
 
         <StatusBadge status={complaint.status} />
       </div>
 
       <div className="complaint-card-body">
-        <h3>{complaint.subject}</h3>
+        <h3>{complaint.subject || complaint.title}</h3>
 
         <p className="complaint-card-description">
           {complaint.description || "No description provided."}
@@ -46,7 +43,13 @@ export default function ComplaintCard({
 
           <div>
             <span>Priority</span>
-            <strong className={priorityClasses[complaint.priority] || ""}>
+            <strong
+              className={
+                complaint.priority
+                  ? `priority-${complaint.priority.toLowerCase()}`
+                  : ""
+              }
+            >
               {complaint.priority || "—"}
             </strong>
           </div>
