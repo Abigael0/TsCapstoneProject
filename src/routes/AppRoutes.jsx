@@ -12,6 +12,8 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import About from "../pages/About";
 import VerifyOtp from "../pages/VerifyOtp";
+import ForgotPassword from "../pages/Forgetpassword";
+import ResetPassword from "../pages/ResetPassword";
 import AdminSignup from "../pages/AdminSignup";
 
 import UserDashboard from "../pages/UserDashboard";
@@ -167,6 +169,15 @@ export default function AppRoutes() {
       />
 
       <Route
+        path="/forgot-password"
+        element={
+          <AuthPage>
+            <ForgotPassword />
+          </AuthPage>
+        }
+      />
+
+       <Route
         path="/verify-otp"
         element={
           <AuthPage>
@@ -174,6 +185,16 @@ export default function AppRoutes() {
           </AuthPage>
         }
       />
+
+      <Route
+        path="/reset-password"
+        element={
+          <AuthPage>
+            <ResetPassword />
+          </AuthPage>
+        }
+      />
+
 
       <Route
         path="/admin-signup"

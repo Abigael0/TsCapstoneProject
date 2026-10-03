@@ -39,7 +39,7 @@ export default function Login({ onLogin }) {
       const user = await onLogin(form);
 
       navigate(
-        user?.role === "admin"
+        user?.role === "ADMIN"
           ? "/admin"
           : "/dashboard"
       );
@@ -171,7 +171,7 @@ export default function Login({ onLogin }) {
               </div>
 
               <p className="signin-forgot-password">
-                <Link to="/verify-otp">Forgot password?</Link>
+                <Link to="/forgot-password">Forgot password?</Link>
               </p>
 
               <Button

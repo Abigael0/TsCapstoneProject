@@ -137,6 +137,37 @@ const api = {
   return data.user;
 },
 
+async forgotPassword({ email }) {
+    return request("/auth/forgot-password", {
+      method: "POST",
+      body: JSON.stringify({
+        email: email.trim(),
+      }),
+    });
+  },
+
+  async verifyResetOTP({ email, otp }) {
+    return request("/auth/verify-reset-otp", {
+      method: "POST",
+      body: JSON.stringify({
+        email: email.trim(),
+        otp,
+      }),
+    });
+  },
+
+  async resetPassword({ email, otp, newPassword }) {
+    return request("/auth/reset-password", {
+      method: "POST",
+      body: JSON.stringify({
+        email: email.trim(),
+        otp,
+        newPassword,
+      }),
+    });
+  },
+
+
   async getCurrentUser() {
     const data = await request("/auth/me", {
       method: "GET",
